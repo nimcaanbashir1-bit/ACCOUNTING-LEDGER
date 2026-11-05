@@ -1,21 +1,19 @@
 package com.pluralsight;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TransactionFileManager {
-        private static String FILE_NAME = "TransactionCVS.java";
+        private static final String FILE_NAME = "transactions.csv";
 
-        public static ArrayList<Transaction>LoadTransaction() {
+        public static ArrayList<Transaction>loadTransactions() {
             ArrayList<Transaction> transactions = new ArrayList<>();
 
             File file = new File(FILE_NAME);
             if (!file.exists()) {
                 createFileWithHeader();
-                return transactions;
                 return transactions;
             }
             try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -33,16 +31,16 @@ public class TransactionFileManager {
 
                     transactions.add(new Transaction(date, time, description, vendor, amount));
                 }
-            } catch (IIOException e) {
+            } catch (IOException e) {
                 System.out.println("Error Reading File: " + e.getMessage());
             }
             return transactions;
         }
-        public static void SaveTransaction(Transaction transaction){
+        public static void saveTransaction(Transaction transaction){
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME,true))){
                 writer.write(transaction.toCsvLine());
                 writer.newLine();
-            }catch (IIOException e) {
+            }catch (IOException e) {
                 System.out.println("Error saving transaction: "+e.getMessage());
             }
 
@@ -51,7 +49,7 @@ public class TransactionFileManager {
             try(BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))){
                 writer.write("date|time|description|vendor|amount");
                 writer.newLine();
-            }catch (IIOException e){
+            }catch (IOException e){
                 System.out.println("Error creating file: "+e.getMessage());
             }
         }
