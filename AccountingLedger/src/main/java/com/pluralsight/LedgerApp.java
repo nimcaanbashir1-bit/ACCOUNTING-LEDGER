@@ -6,20 +6,27 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
 
+
+//===================     THIS CLASS HAS THE MAIN METHOD AND ALL THE MENUS (TALKS TO THE USER)   ================================
 public class LedgerApp {
 
     private static Scanner scanner = new Scanner(System.in);
     private static ArrayList<Transaction> transactions;
 
+    //==============================           START            ===================================================================
+
     public static void main(String[] args) {
         transactions = TransactionFileManager.loadTransactions();
 
         System.out.println("===========================================");
-        System.out.println("         WELCOME TO LEDGER TRACKER         ");
+        System.out.println("         WELCOME TO MY MONEY TRACKER         ");
         System.out.println("===========================================");
 
         showHomeScreen();
     }
+
+
+    //=====================     HOME SCREEN     ==========================================================================
 
     private static void showHomeScreen() {
         boolean running = true;
@@ -55,6 +62,8 @@ public class LedgerApp {
         }
     }
 
+
+    //==============================     ADD DEPOSIT / PAYMENT       ================================================
     private static void addTransaction(boolean isDeposit) {
         System.out.println("Description: ");
         String description = scanner.nextLine();
@@ -88,6 +97,7 @@ public class LedgerApp {
         }
 
     }
+    //===========================     LEDGER SCREEN      ============================================================
 
     private static void showLedgeScreen() {
         boolean intLedger = true;
@@ -123,7 +133,8 @@ public class LedgerApp {
         }
     }
 
-    //=====================     Ledger filter: deposits      ==========================================
+    //=====================     Ledger filter: deposits      =======================================================
+
     private static void displayDeposits() {
         ArrayList<Transaction> results = new ArrayList<>();
         for (Transaction t : transactions) {
@@ -134,7 +145,8 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    //================     Ledger filter: payments      =========================================
+    //================     Ledger filter: payments      ===============================================================
+
     private static void displayPayments() {
         ArrayList<Transaction> results = new ArrayList<>();
         for (Transaction t : transactions) {
@@ -186,7 +198,8 @@ public class LedgerApp {
         }
     }
 
-    //===================  Report 1: this month,this year   =========================
+    //===========================     REPORT 1: THIS MONTH,THIS YEAR   =========================
+
     private static void monthToDate() {
         LocalDate today = LocalDate.now();
         ArrayList<Transaction> results = new ArrayList<>();
@@ -200,7 +213,8 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    //=================   Report 2: all of last month  =====================================
+    //============================   REPORT 2: ALL OF LAST MONTH  =====================================
+
     private static void previousMonth() {
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
         ArrayList<Transaction> results = new ArrayList<>();
@@ -214,7 +228,8 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    //==============    Report 3: everything this year   =======================================
+    //==========================    REPORT 3: EVERYTHING THIS YEAR   =======================================
+
     private static void yearToDate() {
         int thisYear = LocalDate.now().getYear();
         ArrayList<Transaction> results = new ArrayList<>();
@@ -227,7 +242,8 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    // ===================     report 4: everything last year        ============================================
+    // ==========================     REPORT 4: EVERYTHING LAST YEAR        ============================================
+
     private static void previousYear() {
         int lastYear = LocalDate.now().getYear() - 1;          // e.g. 2025
         ArrayList<Transaction> results = new ArrayList<>();
@@ -239,7 +255,8 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    // ====================        report 5: search by vendor         =========================================
+    // ======================= ====       REPORT 5: SEARCH BY VENDOR         =========================================
+
     private static void searchByVendor() {
         System.out.print("Vendor name: ");                     // ask for the vendor
         String vendor = scanner.nextLine().trim();             // read it, remove extra spaces
@@ -253,8 +270,9 @@ public class LedgerApp {
         displayTransactions(results);
     }
 
-    //================    Print any list, Newest first    =======================================================
+    //================    PRINT ANY LIST, NEWEST FIRST    =======================================================
     // Every screen above calls this , so the printing code lives in one place.
+
     private static void displayTransactions(ArrayList<Transaction> list) {
         if (list.isEmpty()) {
             System.out.println("No transaction found.");
