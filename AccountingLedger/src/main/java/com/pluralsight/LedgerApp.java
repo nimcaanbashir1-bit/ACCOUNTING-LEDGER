@@ -9,9 +9,9 @@ import java.util.Scanner;
 public class LedgerApp {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static ArrayList<Transaction>transactions;
+    private static ArrayList<Transaction> transactions;
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         transactions = TransactionFileManager.loadTransactions();
 
         System.out.println("===========================================");
@@ -20,9 +20,10 @@ public class LedgerApp {
 
         showHomeScreen();
     }
-    private static void showHomeScreen(){
+
+    private static void showHomeScreen() {
         boolean running = true;
-        while(running){
+        while (running) {
             System.out.println("\nHOME ");
             System.out.println(" D) Add Deposit");
             System.out.println(" P) Make Payment (Debit)");
@@ -32,7 +33,7 @@ public class LedgerApp {
 
             String choice = scanner.nextLine().trim().toUpperCase();
 
-            switch (choice){
+            switch (choice) {
                 case "D":
                     addTransaction(true);
                     break;
@@ -53,7 +54,8 @@ public class LedgerApp {
             }
         }
     }
-    private static void addTransaction(boolean isDeposit){
+
+    private static void addTransaction(boolean isDeposit) {
         System.out.println("Description: ");
         String description = scanner.nextLine();
 
@@ -65,7 +67,7 @@ public class LedgerApp {
 
         try {
             amount = Double.parseDouble(scanner.nextLine());
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             System.out.println("Invalid amount. Transaction not saved.");
             return;
         }
@@ -79,16 +81,17 @@ public class LedgerApp {
         TransactionFileManager.saveTransaction(transaction);
         transaction.add(transaction);
 
-        if(isDeposit){
+        if (isDeposit) {
             System.out.println("Deposit saved.");
         } else {
             System.out.println("Payment saved. ");
         }
 
     }
-    private static void showLedgeScreen(){
+
+    private static void showLedgeScreen() {
         boolean intLedger = true;
-        while (intLedger){
+        while (intLedger) {
             System.out.println("\nLEDGER ");
             System.out.println(" A) All");
             System.out.println(" D) Deposits");
@@ -98,8 +101,9 @@ public class LedgerApp {
             System.out.println(" Pick an Option: ");
 
             String choice = scanner.nextLine().trim().toUpperCase();
-            switch (choice){
-                case "A";
+            switch (choice) {
+                case "A":
+                    ;
                     displayTransactions(transactions);
                     break;
                 case "D":
@@ -119,14 +123,121 @@ public class LedgerApp {
             }
         }
     }
-    private static void displayDeposits(){
+
+    private static void displayDeposits() {
         ArrayList<Transaction> results = new ArrayList<>();
-        for (Transaction t : transactions){
-            if(t.getAmount()>0){
+        for (Transaction t : transactions) {
+            if (t.getAmount() > 0) {
                 results.add(t);
             }
         }
         displayTransactions(results);
     }
-    pr
+
+    private static void showReportsScreen() {
+        boolean inReports = true;
+        while (inReports) {
+            System.out.println("\nREPORTS ");
+            System.out.println(" 1) Month To Date");
+            System.out.println(" 2) Previous Month");
+            System.out.println(" 3) Year To Date");
+            System.out.println(" 4) Previous Year");
+            System.out.println(" 5) Search by vendor");
+            System.out.println(" 0) Back");
+            System.out.println(" Pick an option: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    monthToDate();
+                    break;
+                case "2":
+                    previousMoth();
+                    break;
+                case "3":
+                    yearToDate();
+                    break;
+                case "4":
+                    previousMonth();
+                    break;
+                case "5":
+                    searchByVendor();
+                    break
+                case "0":
+                    inReports = false;
+                    break;
+                default:
+                    System.out.println("Invalid option, try again.");
+            }
+        }
+    }
+
+    //===================  Report 1: this month,this year   =========================
+    private static void monthToDate() {
+        LocalDate today = LocalDate.now();
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (Transaction t : transactions) {
+            boolean sameYear = t.getDate().getYear() == today.getYear();
+            boolean sameMonth = t.getDate().getMonthValue() == today.getMonthValue();
+            if (sameYear && sameMonth) {
+                results.add(t);
+            }
+        }
+        displayTransactions(results);
+    }
+
+    //=================   Report 2: all of last month  =====================================
+    private static void previousMoth() {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (Transaction t : transactions) {
+            boolean sameYear = t.getDate().getMonthValue() == lastMonth.getMonthValue();
+            boolean sameMonth = t.getDate().getMonthValue() == lastMonth.getMonthValue();
+            if (sameYear && sameMonth) {
+                results.add(t);
+            }
+        }
+        displayTransactions(results);
+    }
+
+    //==============    Report 3: everything this year   =======================================
+    private static void yearToDate() {
+        int thisYear = LocalDate.now().getYear();
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (Transaction t : transactions) {
+            if (t.getDate().getYear() == thisYear)
+                results.add(t);
+        }
+    }
+
+        displayTransactions(reults);
+    }
+// ===================     report 4: everything last year        ============================================
+    private static void previousYear() {
+        int lastYear = LocalDate.now().getYear() - 1;          // e.g. 2025
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (Transaction t : transactions) {
+            if (t.getDate().getYear() == lastYear) {
+            results.add(t);
+        }
+    }
+        displayTransactions(results);
+}
+
+// ====================        report 5: search by vendor         =========================================
+    private static void searchByVendor() {
+        System.out.print("Vendor name: ");                     // ask for the vendor
+        String vendor = scanner.nextLine().trim();             // read it, remove extra spaces
+
+        ArrayList<Transaction> results = new ArrayList<>();
+        for (Transaction t : transactions) {
+            if (t.getVendor().equalsIgnoreCase(vendor)) {      // "amazon" matches "Amazon"
+            results.add(t);
+        }
+    }
+        displayTransactions(results);
+    }
+    //================    Print any list, Newest first    =======================================================
+    // Every screen above calls this , so the printing code lives in one place.
+    private static void displayTransactions(ArrayList<Transaction>list)
 }
