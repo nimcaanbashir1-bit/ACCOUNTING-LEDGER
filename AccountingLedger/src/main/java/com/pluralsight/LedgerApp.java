@@ -80,7 +80,11 @@ public class LedgerApp {
             System.out.println("Invalid amount. Transaction not saved.");
             return;
         }
-
+        // ============= making whatever user typed positive, unless its a payment   =====================================
+        amount = Math.abs(amount);
+        if(!isDeposit){
+            amount = -amount;
+        }
         Transaction transaction = new Transaction(
                 LocalDate.now(),
                 LocalTime.now(),

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class TransactionFileManager {
         private static final String FILE_NAME = "transactions.csv";
-
+        //=========READ: load every line of the file into an ArrayList==============================================
         public static ArrayList<Transaction>loadTransactions() {
             ArrayList<Transaction> transactions = new ArrayList<>();
 
@@ -16,6 +16,7 @@ public class TransactionFileManager {
                 createFileWithHeader();
                 return transactions;
             }
+            // ================  try-with-resources: the reader closes itself automatically when done===================
             try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
